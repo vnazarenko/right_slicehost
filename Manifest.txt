@@ -1,0 +1,11 @@
+History.txt
+Manifest.txt
+README.txt
+Rakefile
+lib/right_slicehost.rb
+lib/slicehost_base.rb
+lib/benchmark_fix.rb
+lib/support.rb
+test/test_right_slicehost.rb
+test/_test_helper.rb
+test/_test_credentials.rb
