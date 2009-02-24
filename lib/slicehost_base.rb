@@ -1,17 +1,39 @@
-
+#
+# Copyright (c) 2007-2009 RightScale Inc
+#
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#
+#
 module Rightscale
 
   class SlicehostBenchmarkingBlock #:nodoc:
     attr_accessor :parser, :service
     def initialize
-      # Benchmark::Tms instance for service (Ec2, S3, or SQS) access benchmarking.
+      # Benchmark::Tms instance for service access benchmarking.
       @service = Benchmark::Tms.new()
       # Benchmark::Tms instance for parsing benchmarking.
       @parser = Benchmark::Tms.new()
     end
   end
 
-  class SlicehostNoChange < RuntimeError
+  class SlicehostNoChange < RuntimeError #:nodoc:
   end
 
   module RightSlicehostInterface
@@ -146,8 +168,8 @@ module Rightscale
       # check single/multi threading mode
       thread = @params[:multi_thread] ? Thread.current : Thread.main
       # create a connection if needed
-      thread[:ec2_connection] ||= Rightscale::HttpConnection.new(:exception => SlicehostError, :logger => @logger)
-      @connection    = thread[:ec2_connection]
+      thread[:connection] ||= Rightscale::HttpConnection.new(:exception => SlicehostError, :logger => @logger)
+      @connection    = thread[:connection]
       @last_request  = request[:request]
       @last_response = nil
       # perform a request
@@ -235,7 +257,7 @@ module Rightscale
   end
 
 
-  # Exception class to signal any Amazon errors. All errors occuring during calls to Amazon's
+  # Exception class to signal any Slicehost errors. All errors occuring during calls to Slicehost's
   # web services raise this type of error.
   # Attribute inherited by RuntimeError:
   #  message    - the text of the error
@@ -289,9 +311,9 @@ module Rightscale
       return nil
     end
 
-    # True if e is an AWS system error, i.e. something that is for sure not the caller's fault.
+    # True if e is an Slicehost system error, i.e. something that is for sure not the caller's fault.
     # Used to force logging.
-    # TODO: Place Slicehost Errors here
+    # TODO: Place Slicehost Errors here - these are AWS errs
     def self.system_error?(e)
  	    !e.is_a?(self) || e.message =~ /InternalError|InsufficientInstanceCapacity|Unavailable/
     end
@@ -434,17 +456,17 @@ module Rightscale
     def self.include_callback
       include XML::SaxParser::Callbacks
     end
-    def initialize(right_aws_parser)
-      @right_aws_parser = right_aws_parser
+    def initialize(slice_parser)
+      @slice_parser = slice_parser
     end
     def on_start_element(name, attr_hash)
-      @right_aws_parser.tag_start(name, attr_hash)
+      @slice_parser.tag_start(name, attr_hash)
     end
     def on_characters(chars)
-      @right_aws_parser.text(chars)
+      @slice_parser.text(chars)
     end
     def on_end_element(name)
-      @right_aws_parser.tag_end(name)
+      @slice_parser.tag_end(name)
     end
     def on_start_document; end
     def on_comment(msg); end

@@ -1,4 +1,4 @@
-= RightScale Slicehost API Ruby Gems
+= RightScale Slicehost API Ruby Gem
 
 Published by RightScale, Inc. under the MIT License.
 For information about RightScale, see http://www.rightscale.com
@@ -9,23 +9,23 @@ The RightScale Slicehost gem has been designed to provide a robust interface to 
 
 == FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
-
-== SYNOPSIS:
-
-  FIX (code sample of usage)
-
-== REQUIREMENTS:
-
-* FIX (list of requirements)
-
+- Full programmatic access to the Slicehost API.
+- Complete error handling: all operations check for errors and report complete
+  error information by raising a SlicehostError.
+- Persistent HTTP connections with robust network-level retry layer using
+  Rightscale::HttpConnection. This includes socket timeouts and retries.
+- Robust HTTP-level retry layer. Certain (user-adjustable) HTTP errors
+  returned by Slicehost are classified as temporary errors.
+  These errors are automaticallly retried using exponentially increasing intervals.
+  The number of retries is user-configurable.
+ 
 == INSTALL:
 
  sudo gem install right_slicehost
 
 == LICENSE:
 
-Copyright (c) 2007-2008 RightScale, Inc. 
+Copyright (c) 2007-2009 RightScale, Inc. 
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
