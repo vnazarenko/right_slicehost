@@ -22,7 +22,7 @@
 
 require 'cgi'
 require 'benchmark'
-require 'md5'
+require 'digest/md5'
 require 'rubygems'
 require "rexml/document"
 require 'right_http_connection'
